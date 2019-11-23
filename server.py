@@ -8,6 +8,8 @@ import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+import json
+
 app = Flask(__name__)
 
 def getName(og_url):
@@ -23,11 +25,6 @@ def getName(og_url):
 
 def scrape(og_url):
 	# scrape all the things
-	databaseURL = {
-	     'databaseURL': "https://reliabilitychecker.firebaseio.com"
-	}
-	cred = credentials.Certificate("/Users/rahulagarwal/Desktop/reliability-checker/firebase-cred.json")
-	firebase_admin.initialize_app(cred, databaseURL)
 
 	database = firestore.client()
 	col_ref = database.collection('sources') # col_ref is CollectionReference
@@ -38,7 +35,9 @@ def scrape(og_url):
 
 	source = doc.to_dict()
 
-	if datetime.datetime.now() - timedelta(days=7) < source.date: # then update information
+	print(source)
+
+	if datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"): # then update information
 
 		url = "https://mediabiasfactcheck.com/?s="+inp
 
@@ -102,15 +101,15 @@ def scrape(og_url):
 		   "country": country,
 		   "press_freedom": press_freedom,
 		   "visitors": visitors,
-		   "date": datetime.datetime.now()
+		   "date": datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		}
 		col_ref.document(u"{}".format(inp)).set(vals)
 
-		return vals
+		return json.dumps(vals, separators=(',', ':'))
 
 	else:
 
-		return source
+		return json.dumps(source, separators=(',', ':'))
 
 
 	# fetch(`ipaddrss:5000?url=${paramter_containing_url_to_scrape}`)
@@ -121,5 +120,11 @@ def root():
 	return scrape(url)
 
 if __name__ == "__main__":
+	databaseURL = {
+	     'databaseURL': "https://reliabilitychecker.firebaseio.com"
+	}
+	cred = credentials.Certificate("/Users/home/Desktop/firebase-cred.json")
+	firebase_admin.initialize_app(cred, databaseURL)
+	
 	app.run(host="0.0.0.0", debug=True)
 
