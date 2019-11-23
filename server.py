@@ -23,21 +23,23 @@ def getName(og_url):
 			return og_url[:f]
 	return og_url
 
-def scrape(og_url):
+def readData(inp):
 	# scrape all the things
 
 	database = firestore.client()
 	col_ref = database.collection('sources') # col_ref is CollectionReference
 
-	inp = getName(og_url)
-
 	doc = col_ref.document(u"{}".format(inp)).get()
 
 	source = doc.to_dict()
 
-	print(source)
+	need_update = False
+	if source == None:
+		need_update = True
+	else:
+		need_update = (datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"))
 
-	if datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"): # then update information
+	if need_update: # then update information
 
 		url = "https://mediabiasfactcheck.com/?s="+inp
 
@@ -64,7 +66,7 @@ def scrape(og_url):
 		html = html[html.find("<strong>")+8:]
 		if html[0] == "<":
 			html = html[html.find(">")+1:]
-			reporting = html[:html.find("<")].lower()
+		reporting = html[:html.find("<")].lower()
 
 		html = html[html.find("<strong>")+8:]
 		if html[0] == "<":
@@ -105,43 +107,50 @@ def scrape(og_url):
 		}
 		col_ref.document(u"{}".format(inp)).set(vals)
 
-		return json.dumps(vals, separators=(',', ':'))
+		return vals
 
 	else:
 
-		return json.dumps(source, separators=(',', ':'))
+		return source
 
 
-	# fetch(`ipaddrss:5000?url=${paramter_containing_url_to_scrape}`)
-
-def setUserReviews(og_url):
-	url = getName(og_url)
-	databaseURL = {
-     'databaseURL': "https://reliabilitychecker.firebaseio.com"
-	}
-	cred = credentials.Certificate("/Users/rahulagarwal/Desktop/reliability-checker/firebase-cred.json")
-	firebase_admin.initialize_app(cred, databaseURL)
+def setUserReviews(url,stars,review,username):
 
 	database = firestore.client()
 	user_reviews = database.collection('user-reviews') # user reviews
 
 	review = {
-		"review": "this is a garbage website",
-		"stars": 1,
-		"username": "adgay"
+		"review": review,
+		"stars": int(stars),
+		"username": username,
+		"website": url
 	}
 
 	user_reviews.document().set(review)
 
 	return "1"
 
-def getUserReview(og_url):
-	url = getName(og_url)
-	
+def getUserReview(url):
+	database = firestore.client()
+	col_ref = database.collection('user-reviews') # col_ref is CollectionReference
+
+	results = col_ref.where('website', '==', url).stream() # one way to query
+
+	d = [x.to_dict() for x in results]
+
+	return d
+
+
 @app.route('/get_info', methods=["GET"])
 def root():
 	url = request.args.get('url')
-	return scrape(url)
+	url = getName(url)
+
+	try:
+		int(request.args.get('stars'))
+		return setUserReviews(url, request.args.get('stars'), request.args.get('review'), request.args.get('username'))
+	except:
+		return json.dumps([readData(url), getUserReview(url)], separators=(',', ':'))
 
 if __name__ == "__main__":
 	databaseURL = {
@@ -149,6 +158,6 @@ if __name__ == "__main__":
 	}
 	cred = credentials.Certificate("/Users/home/Desktop/firebase-cred.json")
 	firebase_admin.initialize_app(cred, databaseURL)
-	
+
 	app.run(host="0.0.0.0", debug=True)
 
