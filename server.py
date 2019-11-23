@@ -114,6 +114,30 @@ def scrape(og_url):
 
 	# fetch(`ipaddrss:5000?url=${paramter_containing_url_to_scrape}`)
 
+def setUserReviews(og_url):
+	url = getName(og_url)
+	databaseURL = {
+     'databaseURL': "https://reliabilitychecker.firebaseio.com"
+	}
+	cred = credentials.Certificate("/Users/rahulagarwal/Desktop/reliability-checker/firebase-cred.json")
+	firebase_admin.initialize_app(cred, databaseURL)
+
+	database = firestore.client()
+	user_reviews = database.collection('user-reviews') # user reviews
+
+	review = {
+		"review": "this is a garbage website",
+		"stars": 1,
+		"username": "adgay"
+	}
+
+	user_reviews.document().set(review)
+
+	return "1"
+
+def getUserReview(og_url):
+	url = getName(og_url)
+	
 @app.route('/get_info', methods=["GET"])
 def root():
 	url = request.args.get('url')
