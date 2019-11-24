@@ -3,21 +3,34 @@
 	<head>
 		<title>Homepage</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/styles.css">
 	</head>
 	<body>
 
-		<div id="navbar">
-			
-				
-			
-			<a href="login/login.html">Login</a>
-			<a href="login/signup.html" class="active" >Sign Up</a>
+		<div id="navbar">	
+			<a href="login/login.html" id='login'>Login</a>
+			<a href="login/signup.html" class="active" id='signup'>Sign Up</a>
 			<a href="aboutus.html">About Us</a>
 			<a href="index.html">Home</a>
-			<h1 style="color:#0000ff;" text>  Forager </h1>
-			
-			
-
+			<h1 style="color:#0000ff;" text>Forager</h1>
+			<script>
+				if(sessionStorage.getItem('logged_in') == "1"){
+					document.getElementById('signup').innerHTML = "Hi, "+sessionStorage.getItem("username");
+					document.getElementById('signup').href = "";
+					document.getElementById('login').href = "";
+					document.getElementById('login').innerHTML = "Logout";
+					document.getElementById('login').onclick = function(){
+						sessionStorage.clear();
+						location.reload();
+					};
+				}else{
+					document.getElementById('login').innerHTML = "Login";
+					document.getElementById('login').onclick = null;
+					document.getElementById('signup').innerHTML = "Signup";
+					document.getElementById('signup').href = "login/signup.html";
+					document.getElementById('login').href = "login/login.html";
+				}
+			</script>
 		</div>
 	
 		<script>
@@ -44,7 +57,7 @@
 	</div>
 	<div class="part">
 		<form class="example" action="search.html" method="get">
-	  		<input type="text" placeholder="Enter your website here..." name="search">
+	  		<input type="text" placeholder="Enter your website here..." name="search" required>
 	  		<button type="submit"><i class="fa fa-search"></i></button>
 		</form>
 	</div>
@@ -52,123 +65,5 @@
 
 		
 	</body>
-<style>
-	.search{
-		width:100%;
-		height:500px;
-		background: #363636;
-		display: flex;
-	}
-	.part{
-		flex: 50%;
-		text-align: center;
-	}
-	body {
-		margin: 0;
-		font-size: 28px;
-		font-family: Arial, Helvetica, sans-serif;
-	}
-	.header {
-		background-color: #000000;
-		padding: 30px;
-		text-align: center;
-	}
-	#navbar {
-		overflow: hidden;
-		background-color: #ffffff;
-		max-height: 60px;
-		box-shadow: 0px 2px 2px #888888;
-	}
-	#navbar a {
-		float: right;
-		display: block;
-		color: #363636;
-		text-align: center;
-		padding: 10px 16px;
-		margin:10px 5px;
-		text-decoration: none;
-		font-size: 18px;
-		background-color: white;
-		
-	}
-	#navbar a:hover {
-		background-color: #fafafc;
-		color: black;
-		
-		
-	}
-	#navbar h1 {
-		text-indent: 100px;
-		font-size: 25px;
-		padding-top: 0px;
-	}
-	
-	#navbar a.active {
-		background-color: #0000ff;
-		color: white;
-		float: right;
-	}
-	.content {
-		padding: 16px;
-	}
-	.sticky {
-		position: fixed;
-		top: 0;
-		width: 100%;
-	}
-	.sticky + .content {
-		padding-top: 60px;
-	}
-	.topnav {
-		overflow: hidden;
-		background-color: #e9e9e9;
-	}
-	* {
-		box-sizing: border-box;
-	}
-
-	.example{
-		margin-top: 32%;
-		margin-left:16%;
-	}
-	
-	/* Style the search field */
-
-	input:focus{
-		outline:none;
-	}
-
-	form.example input[type=text] {
-		padding: 10px;
-		height: 40px;
-		font-size: 17px;
-		float: left;
-		width: 80%;
-		max-width: 400px;
-		border-radius: 40px 0 0 40px;
-	}
-	/* Style the submit button */
-	form.example button {
-		float: left;
-		width: 8%;
-		height: 40px;
-		background: #0000ff;
-		color: white;
-		font-size: 17px;
-		cursor: pointer;
-		max-width: 100px;
-		border-radius: 0 40px 40px 0;
-		
-	}
-	form.example button:hover {
-		background: #0b7dda;
-	}
-	/* Clear floats */
-	form.example::after {
-		content: "";
-		clear: both;
-		display: table;
-	}
-</style>
 
 </html>
