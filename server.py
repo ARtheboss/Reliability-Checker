@@ -206,6 +206,9 @@ def root():
 		if "www." in og_url:
 			og_url = og_url[og_url.find("www.")+4:]
 
+		if og_url.count(".") > 1:
+			og_url = og_url[og_url.find(".")+1:]
+
 		url = getName(og_url)
 
 		print(og_url)
