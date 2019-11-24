@@ -1,0 +1,14 @@
+function httpGet(uri,alias,command,content){
+  //console.log("hello 1");
+  var xmlHttp = new XMLHttpRequest();
+  var params = "alias="+alias+"&action="+command;
+  if (content != null) {
+      params = params + "&content="+content;
+  }
+  var url = "http://"+uri+"?"+params;
+  xmlHttp.open("GET", url, false);
+  xmlHttp.send(null);
+  return xmlHttp.responseText;
+  var returnedText = xmlHttp.responseText;z
+  //console.log("hello 2");
+}
