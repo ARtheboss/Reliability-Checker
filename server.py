@@ -1,4 +1,14 @@
 from flask import Flask, request
+from flask_cors import CORS
+# try:
+#     from flask.ext.cors import CORS  # The typical way to import flask-cors
+# except ImportError:
+#     # Path hack allows examples to be run without installation.
+#     import os
+#     parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     os.sys.path.insert(0, parentdir)
+
+#     from flask.ext.cors import CORS
 
 from urllib.request import urlopen
 from datetime import datetime
@@ -13,6 +23,8 @@ import json
 import requests
 
 app = Flask(__name__)
+cors = CORS(app)
+
 
 def getName(og_url):
 	if og_url[:4] == "htt":
@@ -203,8 +215,7 @@ if __name__ == "__main__":
 	databaseURL = {
 	     'databaseURL': "https://reliabilitychecker.firebaseio.com"
 	}
-	cred = credentials.Certificate("/Users/home/Desktop/firebase-cred.json")
+	cred = credentials.Certificate("firebase-cred.json")
 	firebase_admin.initialize_app(cred, databaseURL)
 
 	app.run(host="0.0.0.0", debug=True)
-
