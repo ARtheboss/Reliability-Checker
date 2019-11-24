@@ -1,0 +1,81 @@
+<head>
+	<title>Login</title>
+</head>
+<script src="login.js"></script>
+<body style='background:#363636;font-family: Arial, Helvetica, sans-serif;color:#363636;'>
+
+	<div class='main'>
+
+		<h1>Login</h1>
+
+		<div class='login'>
+			<div class='info'>
+				<label>Username</label><br>
+				<input type='text' id='username'>
+			</div>
+			<div class='info'>
+				<label>Password</label><br>
+				<input type='password' id='password'>
+			</div><br>
+			<a href='signup.html' style='margin-left:60px;'>Don't have an account?</a>
+			<button onclick='login()'>Login</button>
+		</div>
+
+	</div>
+
+<style>
+
+	.main{
+		background:#fafafc;
+		width:40%;
+		height:60%;
+		margin: auto;
+		margin-top:10%;
+	}
+
+	h1{
+		text-align: center;
+		padding:30px;
+		font-size:50px;
+	}
+
+	.login{
+		width:50%;
+		margin:auto;
+	}
+
+	.info{
+		text-align:center;
+		margin-top:30px;
+	}
+
+	input{
+		height:30px;
+		width:200px;
+		background:#bababa;
+		border:none;
+		text-align: center;
+	}
+
+	label{
+		font-size:20px;
+	}
+
+	button{
+		text-align: center;
+		margin-top:20px;
+		width:50%;
+		height:7%;
+		margin-left:73px;
+		background:#0000ff;
+		color:white;
+		border:none;
+	}
+
+	button:hover{
+		background:#0000ee;
+	}
+
+</style>
+
+</body>
