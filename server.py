@@ -31,13 +31,11 @@ def readData(inp):
 	database = firestore.client()
 	col_ref = database.collection('sources') # col_ref is CollectionReference
 
-	doc = col_ref.document(u"{}".format(inp)).get()
+	doc = col_ref.document(u"{}".format(getName(inp))).get()
 
 	source = doc.to_dict()
 
 	need_update = (source == None) or (datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"))
-
-	need_update = True
 
 	if need_update: # then update information
 
@@ -88,11 +86,11 @@ def readData(inp):
 		html = html[html.find("ThirdFull thissite"):]
 		html = html[html.find("<span>")+6:]
 		linkins = html[:html.find("<")]
-		linkins = str(linkins.replace(',', ''))
+		linkins = int(linkins.replace(',', ''))
 
 		html = html[html.find('rankmini-rank">')+15:]
 		html = html[html.find('</span>')+7:]
-		ranking = int(html[:html.find("\n")])
+		ranking = int(html[:html.find("\n")].replace(',', ''))
 
 		html = html[html.find('class="interests"')+7:]
 		html = html[html.find('descriptionText">')+17:]
@@ -152,14 +150,49 @@ def getUserReview(url):
 
 @app.route('/get_info', methods=["GET"])
 def root():
-	og_url = request.args.get('url')
-	url = getName(og_url)
+	if request.args.get('login') != None:
 
-	try:
-		int(request.args.get('stars'))
-		return setUserReviews(url, request.args.get('stars'), request.args.get('review'), request.args.get('username'))
-	except:
-		return json.dumps([readData(og_url), getUserReview(url)], separators=(',', ':'))
+		database = firestore.client()
+		col_ref = database.collection('users') # col_ref is CollectionReference
+
+		results = col_ref.where('username', '==', request.args.get('login')).stream()
+
+		if results[0]['hash'] == request.args.get('hash'):
+			return "1"
+		else:
+			return "0"
+
+
+	elif request.args.get('signup') != None:
+
+		database = firestore.client()
+		col_ref = database.collection('users') # col_ref is CollectionReference
+
+		vals = {
+			"username":request.args.get('signup'),
+			"password":request.args.get('hash')
+		}
+
+		col_ref.document().set(vals)
+
+		return "1"
+
+	else:
+
+		og_url = request.args.get('url')
+
+		if og_url[:4] != "htt":
+			og_url = og_url[:og_url.find("/")]
+		else:
+			og_url = og_url[:og_url[7:].find("/")+7]
+
+		url = getName(og_url)
+
+		try:
+			int(request.args.get('stars'))
+			return setUserReviews(url, request.args.get('stars'), request.args.get('review'), request.args.get('username'))
+		except:
+			return json.dumps([readData(og_url), getUserReview(url)], separators=(',', ':'))
 
 if __name__ == "__main__":
 	databaseURL = {
