@@ -12,74 +12,63 @@
 
 </head>
 <body style='background:#ffffff;font-family: Arial, Helvetica, sans-serif;'>
-	<div id="navbar">			
+	<div id="navbar" style='z-index: 100;'>			
 		<a href="login/login.html">Login</a>
 		<a href="login/signup.html" class="active" >Sign Up</a>
 		<a href="aboutus.html">About Us</a>
 		<a href="index.html">Home</a>
 		<h1 style="color:#0000ff;" text>  Forager </h1>
 	</div>
-  	<div id='loading' style='width:100%;height:100%;z-index:50;position:absolute;background:#363636;display:none;'>
+  	<div id='loading' style='width:100%;height:100%;z-index:50;position:absolute;background:#363636;'>
   		<div style='margin-top:20%'>
 	  		<div style='margin-left:47%;' class="lds-ring"><div></div><div></div><div></div><div></div></div>
 	  		<h1 style='text-align: center;color:#0000ff;font-size:30px;'>Foraging for Data</h1>
 		</div>
   	</div>
-<script>
-			window.onscroll = function() {myFunction()};
-			var navbar = document.getElementById("navbar");
-			var sticky = navbar.offsetTop;
-			function myFunction() {
-				if (window.pageYOffset >= sticky) {
-					navbar.classList.add("sticky")
-				} else {
-					navbar.classList.remove("sticky");
-				}
-			}
-		</script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 		<!-- The form -->
   	<div class='search'>
-  		<h1 style='text-align: center;color:#ffffff;font-size:75px;transform: translate(575px, 0px);'>  Name  </h1>
-		<h2 style='text-align: center;color:#ffffff;transform: translate(350px, 300px);'>  Score:  </h2>
-		<h2 style='text-align: left;color:#ffffff;transform: translate(352px, 300px);'>  Score  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:75px;transform: translate(500px, 0px);margin-top:60px;' id='main'>  Name  </h1>
+		<h2 style='text-align: center;color:#ffffff;transform: translate(200px, 300px);' id='score'></h2>
   	</div>
   	<div id="thing" style='background: white;'>
   		<h1 style="text-align: center;padding:20px;">Details</h1>
 		
 		<div class='search2'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Bias  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'> Bias  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='bias'></h1>
 		</div>
 
 		<div class='search3'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Country  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  thing  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'> Country  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='country'></h1>
 		</div><div class='search4'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Date  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'>Entry Date</h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='date'></h1>
 		</div><div class='search5'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(125px, -20px);text-align: center;'> Last Updated  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(150px, -3px);text-align: center;'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);text-align: center;'> Last Updated  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);text-align: center;' id='lastUpdated'></h1>
 		</div><div class='search6'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Link  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'>Sites Linking In</h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='links'></h1>
 		</div><div class='search7'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(150px, -20px);text-align: left;'> Press Freedom  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(200px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);text-align: left;'> Press Freedom  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='pressFreedom'></h1>
 		</div><div class='search8'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Ranking  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'>Web Rank</h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='ranking'> </h1>
 		</div><div class='search9'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Reporting  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'>Factual Reporting</h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='reporting'></h1>
 		</div><div class='search10'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(225px, -20px);'> Overall Score </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(250px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'> Overall Score </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='score2'></h1>
 		</div><div class='search11'>
-<h2 id="websiteName" style='color:#ffffff; transform: translate(100px, -20px);'> User Average Score  </h2>
-  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(150px, -3px);'>  Name  </h1>
+<h2 id="websiteName" style='color:#ffffff; transform: translate(10px, -20px);'> User Average Score  </h2>
+  		<h1 style='text-align: center;color:#ffffff;font-size:35px;transform: translate(100px, -3px);' id='userAverage'>  </h1>
+
+</div>
 		
 	<script src="myScript.js"></script>
 </body>
