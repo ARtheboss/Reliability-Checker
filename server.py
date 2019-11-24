@@ -10,6 +10,8 @@ from firebase_admin import credentials, firestore
 
 import json
 
+import requests
+
 app = Flask(__name__)
 
 def getName(og_url):
@@ -33,15 +35,13 @@ def readData(inp):
 
 	source = doc.to_dict()
 
-	need_update = False
-	if source == None:
-		need_update = True
-	else:
-		need_update = (datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"))
+	need_update = (source == None) or (datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"))
+
+	need_update = True
 
 	if need_update: # then update information
 
-		url = "https://mediabiasfactcheck.com/?s="+inp
+		url = "https://mediabiasfactcheck.com/?s="+getName(inp)
 
 		page = urlopen(url)
 		byte_version = page.read()
@@ -80,32 +80,41 @@ def readData(inp):
 
 		press_freedom = int(press_freedom[press_freedom.find(" ")+1:press_freedom.find("/")])
 
-		print("Bias:",bias)
-		print("Factual Reporting:",reporting)
-		print("Country Origin:",country)
-		print("Press Freedom Rank:",press_freedom)
-
-		url = "https://www.alexa.com/siteinfo/"+og_url
-		page = urlopen(url)
+		new_url = "https://www.alexa.com/siteinfo/"+inp
+		page = urlopen(new_url)
 		byte_version = page.read()
 		html = byte_version.decode()
 
 		html = html[html.find("ThirdFull thissite"):]
 		html = html[html.find("<span>")+6:]
-		visitors = html[:html.find("<")]
-		visitors = str(visitors.replace(',', ''))
+		linkins = html[:html.find("<")]
+		linkins = str(linkins.replace(',', ''))
 
-		print("Visitors:",visitors)
+		html = html[html.find('rankmini-rank">')+15:]
+		html = html[html.find('</span>')+7:]
+		ranking = int(html[:html.find("\n")])
+
+		html = html[html.find('class="interests"')+7:]
+		html = html[html.find('descriptionText">')+17:]
+		category = html[:html.find('</div>')]
+
+		r = requests.get(url = "https://archive.org/wayback/available?url="+inp)
+		data = r.json()
+
+		last_updated = datetime.datetime.strptime(data["archived_snapshots"]["closest"]["timestamp"], "%Y%m%d%H%M%S").strftime("%m/%d/%Y, %H:%M:%S")
 
 		vals = {
 		   "bias": bias,
 		   "reporting": reporting,
 		   "country": country,
 		   "press_freedom": press_freedom,
-		   "visitors": visitors,
+		   "links": linkins,
+		   "ranking": ranking,
+		   "category": category,
+		   "last_updated": last_updated,
 		   "date": datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		}
-		col_ref.document(u"{}".format(inp)).set(vals)
+		col_ref.document(u"{}".format(getName(inp))).set(vals)
 
 		return vals
 
@@ -143,14 +152,14 @@ def getUserReview(url):
 
 @app.route('/get_info', methods=["GET"])
 def root():
-	url = request.args.get('url')
-	url = getName(url)
+	og_url = request.args.get('url')
+	url = getName(og_url)
 
 	try:
 		int(request.args.get('stars'))
 		return setUserReviews(url, request.args.get('stars'), request.args.get('review'), request.args.get('username'))
 	except:
-		return json.dumps([readData(url), getUserReview(url)], separators=(',', ':'))
+		return json.dumps([readData(og_url), getUserReview(url)], separators=(',', ':'))
 
 if __name__ == "__main__":
 	databaseURL = {
