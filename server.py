@@ -176,7 +176,7 @@ def root():
 
 		d = [x.to_dict() for x in results]
 		
-		if d[0]['hash'] == d.args.get('hash'):
+		if d[0]['password'] == d.args.get('hash'):
 			return "1"
 		else:
 			return "0"
