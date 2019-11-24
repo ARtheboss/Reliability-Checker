@@ -174,7 +174,9 @@ def root():
 
 		results = col_ref.where('username', '==', request.args.get('login')).stream()
 
-		if results[0]['hash'] == request.args.get('hash'):
+		d = [x.to_dict() for x in results]
+		
+		if d[0]['hash'] == d.args.get('hash'):
 			return "1"
 		else:
 			return "0"
