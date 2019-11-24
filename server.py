@@ -20,12 +20,14 @@ def getName(og_url):
 
 	extension = [".com",".co",".org",".edu"]
 	for i in extension:
-		f = og_url.find(".com")
+		f = og_url.find(i)
 		if f != -1:
 			return og_url[:f]
 	return og_url
 
 def readData(inp):
+
+	print(inp)
 	# scrape all the things
 
 	database = firestore.client()
@@ -36,6 +38,8 @@ def readData(inp):
 	source = doc.to_dict()
 
 	need_update = (source == None) or (datetime.datetime.now() - datetime.timedelta(days=7) > datetime.datetime.strptime(source['date'],"%m/%d/%Y, %H:%M:%S"))
+
+	print(need_update)
 
 	if need_update: # then update information
 
@@ -79,6 +83,7 @@ def readData(inp):
 		press_freedom = int(press_freedom[press_freedom.find(" ")+1:press_freedom.find("/")])
 
 		new_url = "https://www.alexa.com/siteinfo/"+inp
+		print(new_url)
 		page = urlopen(new_url)
 		byte_version = page.read()
 		html = byte_version.decode()
@@ -181,12 +186,12 @@ def root():
 
 		og_url = request.args.get('url')
 
-		if og_url[:4] != "htt":
-			og_url = og_url[:og_url.find("/")]
-		else:
-			og_url = og_url[:og_url[7:].find("/")+7]
+		if "/" in og_url:
+			og_url = og_url[:og_url.rfind("/")]
 
 		url = getName(og_url)
+
+		print(og_url)
 
 		try:
 			int(request.args.get('stars'))
