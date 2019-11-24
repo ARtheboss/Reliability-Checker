@@ -52,32 +52,36 @@ getJSONfile("http://3.14.29.188:5000/get_info?url=" + search);
 function result(text){
   document.getElementById('loading').style.display = 'none';
   text = JSON.parse(text)
-  console.log(text)
 
-  document.getElementById('websiteName').innerHTML = "need to figure this out"
-  document.getElementById('bias').innerHTML = "bias: " + text[0]['bias']
-  document.getElementById('country').innerHTML = "country: " + text[0]['country']
-  document.getElementById('date').innerHTML = "date: " + text[0]['date']
-  document.getElementById('lastUpdated').innerHTML = "Last updated: " + text[0]["last_updated"]
-  document.getElementById('links').innerHTML = "Links: " + text[0]["links"]
-  document.getElementById('pressFreedom').innerHTML = "Press Freedom: " + text[0]["press_freedom"]
-  document.getElementById('ranking').innerHTML = "Ranking: " + text[0]["ranking"]
-  document.getElementById('reporting').innerHTML = "Reporting: " + text[0]["reporting"]
+
+
+  document.getElementById('main').innerHTML = search
+  document.getElementById('bias').innerHTML = text[0]['bias']
+  document.getElementById('country').innerHTML = text[0]['country']
+  document.getElementById('date').innerHTML = text[0]['date'].substr(0,10)
+  document.getElementById('lastUpdated').innerHTML = text[0]["last_updated"].substr(0,10)
+  document.getElementById('links').innerHTML = text[0]["links"]
+  document.getElementById('pressFreedom').innerHTML = text[0]["press_freedom"]+"th"
+  document.getElementById('ranking').innerHTML = text[0]["ranking"]+"th"
+  document.getElementById('reporting').innerHTML = text[0]["reporting"]
+
+  var last_entry = Date.parse(text[0]['date']);
+  var last_updated = Date.parse(text[0]["last_updated"]);
 
   var score = 0
   if (text[0]["links"]>50000){
     score += 2.5
-  }else if((text[0]["links"]<=50000) && (text[0]["links"]>=30000)){
+  }else if(text[0]["links"]>=30000){
     score += 1.5
   }else{
     score += 0.5
   }
 
-  if (text[0]["ranking"] < 40){
-    score += 2.5
-  }else if((text[0]["ranking"] >= 40) && (text[0]["ranking"] <= 60)){
+  if (text[0]["ranking"] < 1000){
     score += 1.5
-  }else{
+  }else if(text[0]["ranking"] < 100000){
+    score += 1
+  }else if(text[0]["ranking"] < 1000000){
     score += 0.5
   }
 
@@ -98,20 +102,30 @@ function result(text){
   if (text[0]["bias"]=="center"){
     score+=2.5
   }else if((text[0]["bias"]=="left-center") || (text[0]["bias"]=="right-center")){
-    score += 1.5
+    score += 2
+  }else if((text[0]["bias"]=="left") || (text[0]["bias"]=="right")){
+    score += 1
   }else{
     score += 0.5
   }
 
   if (text[0]["press_freedom"] < 50){
-    score += 2.5
-  }else if ((text[0]["press_freedom"] >= 50) && (text[0]["press_freedom"] <= 80)){
-    score += 1.5
-  }else{
+    score += 2
+  }else if(text[0]["press_freedom"] <= 80){
+    score += 1
+  }else if(text[0]["press_freedom"] <= 120){
     score += 0.5
   }
+
+  if(last_entry-last_updated < 5){
+    score += 1.5
+  }else if(last_entry-last_updated < 30){
+    score += 1
+  }
   score = score * (2/3)
-  document.getElementById('score').innerHTML = "Overall Score: " + Math.round(score*100)/100 + "/10";
+  document.getElementById('score').innerHTML = Math.round(score*100)/100 + "/10";
+  document.getElementById('score2').innerHTML = Math.round(score*100)/100 + "/10";
+  document.getElementById('score').style.color = "rgb("+(256-score**2*256/100).toString()+","+(score**2*256/100).toString()+",0)";
 
   var i;
   var totalStars = 0;
@@ -121,16 +135,10 @@ function result(text){
     div.style.height = "35";
     div.style.color = "black";
     div.innerHTML = text[1][i]["review"] + ":" + text[1][i]["username"] + " gave " + text[1][i]["stars"] + "stars";
-    document.getElementById("reviews").appendChild(div);
+    //document.getElementById("reviews").appendChild(div);
     totalStars += text[1][i]["stars"]
   }
-  document.getElementById('userAverage').innerHTML = 'User Average Stars: ' + (totalStars / (text[1].length))
+  document.getElementById('userAverage').innerHTML = (totalStars / (text[1].length)).toString() + "/5";
 
 
 }
-
-
-
-
-
-// result(getJSONfile("http://3.14.29.188:5000/get_info?url=" + search));
