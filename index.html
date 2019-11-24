@@ -114,31 +114,15 @@
 		</style>
 	</head>
 	<body>
-		<?php
 
-		session_start();
-
-		if(!isset($_SESSION["currentuser"]))
-		{
-			session_destroy();
-			header("Location: https://jhart.tanglincomputing.com/Hackathon/loginH.php");
-		}
-
-
-
-	
-		?>
-
-
-	
 		<div id="navbar">
 			
 				
 			
-			<a class="active" href="https://jhart.tanglincomputing.com/Hackathon/loginH.php">Login</a>
-			<a href="https://jhart.tanglincomputing.com/Hackathon/registerH.php">Sign Up</a>
-			<a href="https://jhart.tanglincomputing.com/Hackathon/aboutus.php">About Us</a>
-			<a href="https://jhart.tanglincomputing.com/Hackathon/homepageH.php">Home</a>
+			<a class="active" href="login.html">Login</a>
+			<a href="register.html">Sign Up</a>
+			<a href="aboutus.html">About Us</a>
+			<a href="index.html">Home</a>
 			<h1 style="color:blue;" text>  Forager </h1>
 			
 			
