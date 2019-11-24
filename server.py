@@ -176,7 +176,7 @@ def root():
 
 		d = [x.to_dict() for x in results]
 		
-		if d[0]['password'] == d.args.get('hash'):
+		if d[0]['password'] == request.args.get('hash'):
 			return "1"
 		else:
 			return "0"
@@ -202,6 +202,9 @@ def root():
 
 		if "/" in og_url:
 			og_url = og_url[:og_url.rfind("/")]
+
+		if "www." in og_url:
+			og_url = og_url[og_url.find("www.")+4:]
 
 		url = getName(og_url)
 
